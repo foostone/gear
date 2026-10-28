@@ -14,6 +14,14 @@ import type { CodexJob } from './contracts.js'
 import { CodexUsage } from './usage.js'
 import { cleanupCodex, type CodexResources, type CodexWorkerLifecycle } from './cleanup.js'
 
+export interface MetaExecutionDriver {
+  provider: string
+  describe: typeof describeCodex
+  prepare: typeof prepareSandbox
+  collect(sandbox: Awaited<ReturnType<typeof prepareSandbox>>, directory: string): Promise<void>
+  usage(): Pick<CodexUsage, 'record' | 'result'>
+}
+
 export async function exists(path: string): Promise<boolean> {
   try {
     await lstat(path)
@@ -23,7 +31,7 @@ export async function exists(path: string): Promise<boolean> {
     throw error
   }
 }
-function parseResult(value: unknown, taskIds: string[]): Record<string, Json> {
+export function parseResult(value: unknown, taskIds: string[]): Record<string, Json> {
   const data = value as Record<string, Json>
   const strings = (input: unknown): input is string[] =>
     Array.isArray(input) &&
@@ -59,6 +67,7 @@ export async function executeJob(
   job: CodexJob,
   directory: string,
   worker?: CodexWorkerLifecycle,
+  driver?: MetaExecutionDriver,
 ): Promise<OperationReceipt> {
   const { request, configuration: config, context } = job.input
   const operation = request.operation
@@ -67,16 +76,16 @@ export async function executeJob(
     status: 'complete' | 'failed' = 'failed'
   let data: Json = { error: 'codex-execution-failed' },
     outcome = 'failed'
-  const usage = new CodexUsage()
+  const usage = driver?.usage() ?? new CodexUsage()
   let processCompleted = false,
     modelStopped = true
   const resources: CodexResources = {}
   try {
     try {
       if (await exists(join(directory, 'cancel.json'))) throw new Error('codex-cancelled')
-      const runtime = await describeCodex(config)
+      const runtime = await (driver?.describe ?? describeCodex)(config)
       if (runtime.identity !== job.identity) throw new Error('codex-identity-changed')
-      sandbox = await prepareSandbox(job, runtime, resources)
+      sandbox = await (driver?.prepare ?? prepareSandbox)(job, runtime, resources)
       const log = await open(join(directory, 'events.jsonl'), 'wx', 0o600)
       const diagnostics = await open(join(directory, 'stderr.log'), 'wx', 0o600)
       try {
@@ -204,6 +213,7 @@ export async function executeJob(
         await diagnostics.close()
       }
       if (await exists(join(directory, 'cancel.json'))) throw new Error('codex-cancelled')
+      await driver?.collect(sandbox, directory)
       const resultPath = join(sandbox.output, 'result.json'),
         info = await lstat(resultPath)
       if (!info.isFile() || info.isSymbolicLink() || info.nlink !== 1 || info.size > 1024 * 1024)
@@ -266,7 +276,7 @@ export async function executeJob(
       physicalAttempts: 0,
       usage: usage.result(processCompleted),
       provenance: {
-        provider: 'codex',
+        provider: driver?.provider ?? 'codex',
         implementation: job.identity,
         model: config.model,
         input_digest: job.digest,

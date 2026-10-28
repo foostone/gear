@@ -7,11 +7,13 @@ import { hitchJson } from '../adapters/hitch/transport.js'
 import { setupPython } from './python.js'
 import { findExecutable, pinImage } from './profile-service.js'
 import { assertProfileRole, profile, selectDefaultProfile } from './profile-store.js'
+import { dockerAccess } from '../adapters/docker/access.js'
 import { runtimeMatrix, supportedNode } from './runtime-matrix.js'
 
 export interface SetupOptions {
   python?: string
   hitch?: boolean
+  dockerAccess?: boolean
   adapter?: 'dsh' | 'pi'
   hitchExecutable?: string
   hitchRoot?: string
@@ -32,6 +34,13 @@ export async function setup(options: SetupOptions = {}) {
   if (options.targetProfile)
     assertProfileRole(await profile(options.targetProfile), 'target', options.adapter)
   if (options.metaProfile) assertProfileRole(await profile(options.metaProfile), 'meta')
+  const docker = options.dockerAccess ? await dockerAccess() : { status: 'not_requested' }
+  if (options.dockerAccess && !options.hitch)
+    return {
+      docker_access: docker,
+      authentication: 'authentication' in docker ? docker.authentication : 'not_checked',
+      benchmark: 'not_run',
+    }
   const python = await setupPython(options.python)
   let execution: unknown = { status: 'not_requested', next_action: 'gear setup --hitch' }
   if (options.hitch) {
@@ -92,6 +101,7 @@ export async function setup(options: SetupOptions = {}) {
   }
   return {
     python,
+    docker_access: docker,
     execution,
     authentication: 'not_checked',
     benchmark: 'not_run',

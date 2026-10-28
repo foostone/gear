@@ -25,7 +25,8 @@
     "gear-hitch-codex": "./assets/hitch-codex-wrapper.mjs",
     "gear-dsh-runtime-check": "./assets/dsh-runtime-check.mjs",
     "gear": "./lib/cli.js",
-    "gear-meta-codex": "./assets/codex-meta-runner.mjs"
+    "gear-meta-codex": "./assets/codex-meta-runner.mjs",
+    "gear-meta-dsh": "./assets/dsh-meta-runner.mjs"
   },
   "exports": {
     ".": {
@@ -87,7 +88,9 @@
     "docs/training/unattended-iteration.zh-CN.md",
     "docs/training/managed-native.zh-CN.md",
     "docs/unattended-model-iteration-design.zh-CN.md",
-    "docs/validation/unattended-scheduler-controlled-2026-10-15.json"
+    "docs/validation/unattended-scheduler-controlled-2026-10-15.json",
+    "assets/dsh-meta-runner.mjs",
+    "assets/docker-access.py"
   ],
   "scripts": {
     "clean": "node -e \"require('node:fs').rmSync('lib',{recursive:true,force:true})\"",

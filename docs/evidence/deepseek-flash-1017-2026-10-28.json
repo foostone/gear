@@ -1,0 +1,67 @@
+{
+  "kind": "dsh-meta-synthetic-canary",
+  "benchmark_tasks": 0,
+  "passed": true,
+  "model": "deepseek-flash",
+  "thinking": "enabled",
+  "reasoning_effort": "high",
+  "elapsed_seconds": 227.682,
+  "provider_identity": "sha256:d0166e884917f045ec93d3503ba23548c541945feeaa291c6490f14479f9f807",
+  "implementation": "sha256:626168481b27f5146b411f5e190d98bab4ab511b84dee32f7a146e98ab1bffde",
+  "duplicate_submission_reused": true,
+  "inspection_recovered": true,
+  "physical_attempts": 0,
+  "usage": {
+    "input_tokens": null,
+    "output_tokens": null,
+    "cached_input_tokens": null,
+    "tokens": null,
+    "model_requests": null,
+    "dollars": null
+  },
+  "isolation": "bubblewrap-only",
+  "attribution": "Official deepseek-flash alias mapping to DeepSeek-V4.1-Flash-1017; no immutable checkpoint guarantee",
+  "date": "2026-10-28",
+  "gear_base_commit": "2e4751287f1b746c7f28343efb42f2ebf532fe14",
+  "hitch_pr": "https://github.com/rsi-gear/agent-hitch/pull/59",
+  "dsh_version": "0.2.1-rc.2",
+  "remaining": {
+    "harbor_single_task": "not_run: Docker permission unavailable; system permission changes declined",
+    "marketing_100": "not_run: source selection frozen; no benchmark scores",
+    "support": "not_run: original experiment conditions not fully reconstructed",
+    "terminal_bench": "not_run: original experiment conditions not fully reconstructed"
+  },
+  "preliminary_attempts": [
+    {
+      "id": "identity-probe",
+      "state": "stopped before model submission; serial runtime hashing replaced by bounded parallel hashing"
+    },
+    {
+      "id": "meta-v2",
+      "state": "terminal failed receipt: sandbox bridge helper missing from the minimal child PATH; fixed by pinning its executable"
+    }
+  ],
+  "validation": {
+    "focused_meta_contract_tests": {
+      "passed": 22,
+      "isolation": "bubblewrap-only"
+    },
+    "typecheck": "passed",
+    "lint": "passed",
+    "format": "passed",
+    "boundaries": "passed",
+    "contracts": "passed",
+    "gear_full_regression": "running; final outcome will be appended",
+    "hitch_full_regression": {
+      "tests": 997,
+      "passed": 977,
+      "failed": 5,
+      "skipped": 15
+    },
+    "hitch_remote_verifier_isolated_retry": {
+      "passed": 2,
+      "failed": 2
+    },
+    "native_system_authorization": "not executed; tested with mocks only"
+  }
+}

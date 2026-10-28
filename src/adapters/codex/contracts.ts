@@ -100,7 +100,10 @@ export function configuration(input: unknown): CodexConfiguration {
     )
   return value
 }
-export function validateInput(input: unknown): CodexInput {
+export function validateInput(
+  input: unknown,
+  validateConfiguration: (input: unknown) => CodexConfiguration = configuration,
+): CodexInput {
   const value = input as CodexInput
   if (
     !value ||
@@ -108,7 +111,7 @@ export function validateInput(input: unknown): CodexInput {
     !['describe', 'prepare_admission', 'submit', 'inspect', 'cancel'].includes(value.action)
   )
     throw new GearError('codex-protocol-invalid', 'Expected operation provider protocol version 1')
-  configuration(value.configuration)
+  validateConfiguration(value.configuration)
   const context = value.context
   if (
     !context ||

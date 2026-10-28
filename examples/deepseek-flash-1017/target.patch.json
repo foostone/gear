@@ -1,0 +1,4 @@
+[
+  {"id":"llm-deepseek","config":{"baseURL":"https://api.deepseek.com/anthropic","thinking":"enabled","reasoningEffort":"high"}},
+  {"id":"agent-default-model","config":{"provider":"deepseek-official","model":"deepseek-flash","reasoningEffort":"high"}}
+]

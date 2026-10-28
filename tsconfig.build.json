@@ -12,7 +12,10 @@
     "src/cli.ts",
     "src/skill/index.ts",
     "src/training/index.ts",
-    "src/adapters/codex/runner.ts"
+    "src/adapters/codex/runner.ts",
+    "src/adapters/dsh-meta/runner.ts"
   ],
-  "exclude": ["tests"]
+  "exclude": [
+    "tests"
+  ]
 }

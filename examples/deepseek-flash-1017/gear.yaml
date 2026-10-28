@@ -1,0 +1,8 @@
+version: 1
+benchmark: ./benchmark.yaml
+target: {adapter: dsh, path: ./target, profile: flash-1017-target}
+meta: {profile: flash-1017-meta}
+algorithm: {name: gepa, options: {promotion_widths: [2, 1]}}
+objective: {metric: pass_rate}
+validation: {mode: research}
+budget: {rounds: 3, max_candidates: 12, max_evaluations: 1000, repetitions: 1}

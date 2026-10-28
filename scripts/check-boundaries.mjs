@@ -70,7 +70,7 @@ const follow = (path, trail = []) => {
   if (retired.test(relative(join(root, 'src'), path))) failures.push('Public entrypoint loads retired assembly: ' + [...trail, path].map(value => relative(root, value)).join(' -> '))
   for (const next of runtimeGraph.get(path)) follow(next, [...trail, path])
 }
-for (const entry of ['index.ts', 'cli.ts', 'skill/index.ts', 'training/index.ts', 'adapters/codex/runner.ts']) follow(join(root, 'src', entry))
+for (const entry of ['index.ts', 'cli.ts', 'skill/index.ts', 'training/index.ts', 'adapters/codex/runner.ts', 'adapters/dsh-meta/runner.ts']) follow(join(root, 'src', entry))
 if (failures.length) throw new Error(failures.join('\n'))
 console.log(`Dependency boundaries passed for ${graph.size} TypeScript modules`)
 console.log(`Public entrypoints reach ${reachable.size} runtime modules without retired execution assemblies`)

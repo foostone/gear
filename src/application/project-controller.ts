@@ -95,6 +95,7 @@ export class ProjectController {
       const params = object(input, [
         'python',
         'hitch',
+        'dockerAccess',
         'adapter',
         'hitchExecutable',
         'hitchRoot',
@@ -103,9 +104,9 @@ export class ProjectController {
         'metaProfile',
       ])
       for (const [key, value] of Object.entries(params)) {
-        if (key === 'hitch') {
+        if (key === 'hitch' || key === 'dockerAccess') {
           if (typeof value !== 'boolean')
-            throw new GearError('invalid-command-params', 'hitch must be boolean')
+            throw new GearError('invalid-command-params', `${key} must be boolean`)
         } else string(value, key)
       }
       return setup(params as SetupOptions)

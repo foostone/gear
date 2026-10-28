@@ -50,6 +50,8 @@ export async function describeCodex(config: CodexConfiguration): Promise<{
       'identity',
       'executable',
       'runner',
+      '../process/meta-runner',
+      '../process/executable',
       'journal',
       'sandbox',
       'execution',
